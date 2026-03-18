@@ -8,9 +8,9 @@ public interface IOfferService
     Offer? GetOfferById(string offerId);
     List<Offer> GetOffersByPlayerId(string playerId);
     List<Offer> GetOffersByTeamId(string teamId);
-    void CreateOffer(Offer offer);
-    void AcceptOffer(string offerId);
-    void RejectOffer(string offerId);
-    void UpdateOffer(Offer offer);
-    void DeleteOffer(string offerId);
+    Task  CreateOfferAsync(Offer offer);
+    Task  AcceptOfferAsync(string offerId);
+    Task  RejectOfferAsync(string offerId);
+    Task  UpdateOfferAsync(Offer offer);
+    Task  DeleteOfferAsync(string offerId);
 }

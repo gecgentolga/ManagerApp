@@ -6,7 +6,7 @@ namespace Domain.Entities.Concrete;
 public class Team : IEntity
 {
     [Key]
-    public string TeamId { get; set; } = null!;
+    public int TeamId { get; set; }
     public string TeamName { get; set; } = null!;
     public string LeagueId { get; set; } = null!;
 }

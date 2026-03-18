@@ -7,63 +7,95 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class OfferController : Controller
 {
-        private IOfferService _offerService;
-    
-        public OfferController(IOfferService offerService)
+    private IOfferService _offerService;
+
+    public OfferController(IOfferService offerService)
+    {
+        _offerService = offerService;
+    }
+
+    [HttpGet("GetAllOffers")]
+    public IActionResult GetAllOffers()
+    {
+        
+        var offers = _offerService.GetAllOffers();
+        return Ok(offers);
+    }
+
+    [HttpGet("OfferById")]
+    public IActionResult GetOfferById(string offerId)
+    {
+        var offer = _offerService.GetOfferById(offerId);
+        if (offer == null)
+            return NotFound();
+
+        return Ok(offer);
+    }
+
+    [HttpPost("CreateOffer")]
+    public IActionResult CreateOffer([FromBody] Offer offer)
+    {
+        _offerService.CreateOfferAsync(offer);
+        return CreatedAtAction(nameof(GetOfferById), new { offerId = offer.OfferId }, offer);
+    }
+
+    [HttpPost("{offerId}/accept")]
+    public IActionResult AcceptOffer(string offerId)
+    {
+        try
         {
-            _offerService = offerService;
+            _offerService.AcceptOfferAsync(offerId);
+            return NoContent();
         }
-    
-        [HttpGet("GetAllOffers")]
-        public IActionResult GetAllOffers()
+        catch (InvalidOperationException ex)
         {
-            var offers = _offerService.GetAllOffers();
-            return Ok(offers);
+            return NotFound(ex.Message);
         }
-    
-        [HttpGet("OfferById")]
-        public IActionResult GetOfferById(string offerId)
+    }
+
+    [HttpPost("{offerId}/reject")]
+    public IActionResult RejectOffer(string offerId)
+    {
+        try
         {
-            var offer = _offerService.GetOfferById(offerId);
-            if (offer == null)
-                return NotFound();
-            
-            return Ok(offer);
+            _offerService.RejectOfferAsync(offerId);
+            return NoContent();
         }
-    
-        [HttpPost("CreateOffer")]
-        public IActionResult CreateOffer([FromBody] Offer offer)
+        catch (InvalidOperationException ex)
         {
-            _offerService.CreateOffer(offer);
-            return CreatedAtAction(nameof(GetOfferById), new { offerId = offer.OfferId }, offer);
+            return NotFound(ex.Message);
         }
-    
-        [HttpPost("{offerId}/accept")]
-        public IActionResult AcceptOffer(string offerId)
+    }
+
+    [HttpPut("UpdateOffer")]
+    public async Task<IActionResult> UpdateOffer([FromBody] Offer offer)
+    {
+        try
         {
-            try
-            {
-                _offerService.AcceptOffer(offerId);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _offerService.UpdateOfferAsync(offer);
+            return NoContent();
         }
-    
-        [HttpPost("{offerId}/reject")]
-        public IActionResult RejectOffer(string offerId)
+        catch (Exception e)
         {
-            try
-            {
-                _offerService.RejectOffer(offerId);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return BadRequest();
+
         }
+    }
+
+    [HttpDelete("{offerId}")]
+    public async Task<IActionResult> DeleteOffer(string offerId)
+    {
+        try
+        {
+            await _offerService.DeleteOfferAsync(offerId);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+
+        }
+
+    }
 }
 

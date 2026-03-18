@@ -2,6 +2,7 @@ using Application.DataAccess;
 using Application.IServices;
 using Application.Services;
 using Infrastructure.DataAccess.Concrete.EntityFramework;
+using Infrastructure.DataAccess.ImportDataViaApi;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.DependencyResolvers.EFDependencyResolver;
@@ -20,7 +21,7 @@ public static class DependencyResolver
         services.AddScoped<IOwnedPlayerDal, EfOwnedPlayerDal>();
         services.AddScoped<IPlayerDal, EfPlayerDal>();
         services.AddScoped<ITeamDal, EfTeamDal>();
-        
+        services.AddScoped<IPlayerImport,PlayerImportHandler>();
         // Business Logic Services
         services.AddScoped<IOfferService, OfferService>();
         

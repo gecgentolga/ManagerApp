@@ -11,4 +11,6 @@ public class Player : IEntity
     public string Position { get; set; } = null!;
     public int Age { get; set; }
     public double MarketValue { get; set; }
+    public int TeamId { get; set; }
+    
 }

@@ -1,3 +1,4 @@
+using System.Transactions;
 using Application.IServices;
 using Application.DataAccess;
 using Domain.Entities.Concrete;
@@ -7,10 +8,12 @@ namespace Application.Services;
 public class OfferService : IOfferService
 {
     IOfferDal _offerDal;
+    IContractDal _contractDal;
 
-    public OfferService(IOfferDal offerDal)
+    public OfferService(IOfferDal offerDal, IContractDal contractDal)
     {
         _offerDal = offerDal;
+        _contractDal = contractDal;
     }
 
     public List<Offer> GetAllOffers()
@@ -33,50 +36,63 @@ public class OfferService : IOfferService
         return _offerDal.GetAll(o => o.TeamId == teamId);
     }
 
-    public void CreateOffer(Offer offer)
+    public async Task  CreateOfferAsync(Offer offer)
     {
         // İş kuralı: Yeni teklif varsayılan olarak pending (false) olmalı
         offer.OfferStatus = false;
         _offerDal.Add(offer);
+        await _offerDal.SaveAsync();
     }
 
-    public void AcceptOffer(string offerId)
+    public async Task AcceptOfferAsync(string offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)
             throw new InvalidOperationException($"Offer {offerId} not found.");
+
+        // İş kuralı: Teklif kabul edildiğinde yeni bir Contract oluşturulmalı
+        var contract = new Contract
+        {
+            CommissionRate = offer.CommissionRate,
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddMonths(offer.ContractPeriodMonths)
+        };
+
+        _contractDal.Add(contract);
+        _offerDal.Delete(offer);
+        await _offerDal.SaveAsync();
         
-        // İş kuralı: Teklif kabul edildiğinde OfferStatus = true
-        offer.OfferStatus = true;
-        _offerDal.Update(offer);
     }
 
-    public void RejectOffer(string offerId)
+    public async Task  RejectOfferAsync(string offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)
             throw new InvalidOperationException($"Offer {offerId} not found.");
-        
+
         // İş kuralı: Teklif reddedildiğinde OfferStatus = false
         offer.OfferStatus = false;
         _offerDal.Update(offer);
+        await _offerDal.SaveAsync();
     }
 
-    public void UpdateOffer(Offer offer)
+    public async Task UpdateOfferAsync(Offer offer)
     {
         var existing = _offerDal.Get(o => o.OfferId == offer.OfferId);
         if (existing == null)
             throw new InvalidOperationException($"Offer {offer.OfferId} not found.");
-        
+
         _offerDal.Update(offer);
+        await _offerDal.SaveAsync();
     }
 
-    public void DeleteOffer(string offerId)
+    public async Task DeleteOfferAsync(string offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)
             throw new InvalidOperationException($"Offer {offerId} not found.");
-        
+
         _offerDal.Delete(offer);
+        await _offerDal.SaveAsync();
     }
 }
