@@ -23,9 +23,16 @@ public class ContractController : Controller
     }
 
     [HttpGet("ContractsManagerId")]
-    public IActionResult GetContractsManagerId(string managerId)
+    public IActionResult GetContractsManagerId(int managerId)
     {
         var contracts = _contractService.GetContractsByManagerId(managerId);
+        return Ok(contracts);
+    }
+    
+    [HttpGet("ContractsByPlayerId")]
+    public IActionResult GetContractsPlayerId(string playerId)
+    {
+        var contracts = _contractService.GetContractsByPlayerId(playerId);
         return Ok(contracts);
     }
 

@@ -9,7 +9,7 @@ public interface IContractService
     Contract? GetContractById(int contractId);
     List<Contract> GetContractsByPlayerId(string playerId);
     
-    List<Contract> GetContractsByManagerId(string managerId);
+    List<Contract> GetContractsByManagerId(int managerId);
     Task CreateContractAsync(Contract contract);
     Task UpdateContractAsync(Contract contract);
     Task DeleteContractAsync(int contractId);

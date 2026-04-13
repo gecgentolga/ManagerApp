@@ -6,11 +6,12 @@ namespace Domain.Entities.Concrete;
 public class Offer : IEntity
 {
     [Key]
-    public string OfferId { get; set; } = null!;
+    public int OfferId { get; set; } 
     public string PlayerId { get; set; } = null!;
-    public string TeamId { get; set; } = null!;
+    
+    public int ManagerId { get; set; }
     public double CommissionRate { get; set; }
     public int ContractPeriodMonths { get; set; }
-    public bool OfferStatus { get; set; } // false: rejected, true: accepted
+    public bool OfferStatus { get; set; } // false: inactive, true: active
     
 }

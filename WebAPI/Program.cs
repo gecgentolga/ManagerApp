@@ -1,6 +1,6 @@
 using Infrastructure.DataAccess.Concrete.EntityFramework;
 using Infrastructure.DataAccess.ImportDataViaApi;
-using Infrastructure.DependencyResolvers.EFDependencyResolver;
+using Infrastructure.DependencyResolvers.DependencyResolver;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

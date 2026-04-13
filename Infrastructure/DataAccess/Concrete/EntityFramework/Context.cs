@@ -32,6 +32,7 @@ public class Context : DbContext
         modelBuilder.Entity<Player>(e => { e.ToTable("Players"); });
         modelBuilder.Entity<Team>(e => { e.ToTable("Teams"); });
         modelBuilder.Entity<Offer>(e => { e.ToTable("Offers"); });
+        modelBuilder.Entity<Manager>(e => { e.ToTable("Managers"); });
     }
 
     public DbSet<Contract> Contracts { get; set; } = null!;
@@ -40,4 +41,5 @@ public class Context : DbContext
     public DbSet<Player> Players { get; set; } = null!;
     public DbSet<Team> Teams { get; set; } = null!;
     public DbSet<Offer> Offers { get; set; } = null!;
+    public DbSet<Manager> Managers { get; set; } = null!;
 }

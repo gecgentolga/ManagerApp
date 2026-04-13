@@ -26,8 +26,9 @@ public class ContractService:IContractService
     {
         return _contractDal.GetAll(o => o.PlayerId == playerId);
     }
+    
 
-    public List<Contract> GetContractsByManagerId(string managerId)
+    public List<Contract> GetContractsByManagerId(int managerId)
     {
         return _contractDal.GetAll(o => o.ManagerId == managerId);
     }
@@ -44,6 +45,8 @@ public class ContractService:IContractService
         _contractDal.Update(contract);
         await _contractDal.SaveAsync();
     }
+
+
 
     public async Task DeleteContractAsync(int contractId)
     {

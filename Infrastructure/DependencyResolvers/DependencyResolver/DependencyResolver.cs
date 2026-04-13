@@ -5,7 +5,7 @@ using Infrastructure.DataAccess.Concrete.EntityFramework;
 using Infrastructure.DataAccess.ImportDataViaApi;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.DependencyResolvers.EFDependencyResolver;
+namespace Infrastructure.DependencyResolvers.DependencyResolver;
 
 public static class DependencyResolver
 {
@@ -22,9 +22,14 @@ public static class DependencyResolver
         services.AddScoped<IPlayerDal, EfPlayerDal>();
         services.AddScoped<ITeamDal, EfTeamDal>();
         services.AddScoped<IPlayerImport,PlayerImportHandler>();
+        services.AddScoped<IManagerDal, EfManagerDal>();
         // Business Logic Services
         services.AddScoped<IOfferService, OfferService>();
-        
+        services.AddScoped<IOwnedPlayerService, OwnedPlayerService>();
+        services.AddScoped<ITeamService, TeamService>();
+        services.AddScoped<IManagerService,ManagerService>();
+        services.AddScoped<IContractService, ContractService>();
+        services.AddScoped<IPlayerService, PlayerService>();
         return services;
     }
 }

@@ -1,5 +1,6 @@
 using Application.IServices;
 using Domain.Entities.Concrete;
+using Domain.Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -23,7 +24,7 @@ public class OfferController : Controller
     }
 
     [HttpGet("OfferById")]
-    public IActionResult GetOfferById(string offerId)
+    public IActionResult GetOfferById(int offerId)
     {
         var offer = _offerService.GetOfferById(offerId);
         if (offer == null)
@@ -33,19 +34,19 @@ public class OfferController : Controller
     }
 
     [HttpPost("CreateOffer")]
-    public IActionResult CreateOffer([FromBody] Offer offer)
+    public async Task<IActionResult> CreateOffer([FromBody] OfferDetailDto offerDetailDto)
     {
-        _offerService.CreateOfferAsync(offer);
-        return CreatedAtAction(nameof(GetOfferById), new { offerId = offer.OfferId }, offer);
+        await _offerService.CreateOfferAsync(offerDetailDto);
+        return Ok("Offer created successfully");
     }
 
     [HttpPost("{offerId}/accept")]
-    public IActionResult AcceptOffer(string offerId)
+    public async Task<IActionResult> AcceptOffer(int offerId)
     {
         try
         {
-            _offerService.AcceptOfferAsync(offerId);
-            return NoContent();
+           await _offerService.AcceptOfferAsync(offerId);
+            return Ok("Offer accepted and contract created successfully");
         }
         catch (InvalidOperationException ex)
         {
@@ -54,11 +55,11 @@ public class OfferController : Controller
     }
 
     [HttpPost("{offerId}/reject")]
-    public IActionResult RejectOffer(string offerId)
+    public async Task<IActionResult> RejectOffer(int offerId)
     {
         try
         {
-            _offerService.RejectOfferAsync(offerId);
+           await _offerService.RejectOfferAsync(offerId);
             return NoContent();
         }
         catch (InvalidOperationException ex)
@@ -83,7 +84,7 @@ public class OfferController : Controller
     }
 
     [HttpDelete("{offerId}")]
-    public async Task<IActionResult> DeleteOffer(string offerId)
+    public async Task<IActionResult> DeleteOffer(int offerId)
     {
         try
         {

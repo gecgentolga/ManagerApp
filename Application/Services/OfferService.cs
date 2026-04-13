@@ -2,6 +2,7 @@ using System.Transactions;
 using Application.IServices;
 using Application.DataAccess;
 using Domain.Entities.Concrete;
+using Domain.Entities.DTOs;
 
 namespace Application.Services;
 
@@ -21,7 +22,7 @@ public class OfferService : IOfferService
         return _offerDal.GetAll();
     }
 
-    public Offer? GetOfferById(string offerId)
+    public Offer? GetOfferById(int offerId)
     {
         return _offerDal.Get(o => o.OfferId == offerId);
     }
@@ -31,20 +32,26 @@ public class OfferService : IOfferService
         return _offerDal.GetAll(o => o.PlayerId == playerId);
     }
 
-    public List<Offer> GetOffersByTeamId(string teamId)
+    public List<Offer> GetOffersByManagerId(int managerId)
     {
-        return _offerDal.GetAll(o => o.TeamId == teamId);
+        return _offerDal.GetAll(o => o.ManagerId == managerId);
     }
 
-    public async Task  CreateOfferAsync(Offer offer)
+    public async Task  CreateOfferAsync(OfferDetailDto offerDto)
     {
-        // İş kuralı: Yeni teklif varsayılan olarak pending (false) olmalı
-        offer.OfferStatus = false;
+        var offer = new Offer
+        {
+            PlayerId = offerDto.PlayerId,
+            ManagerId = offerDto.ManagerId,
+            CommissionRate = offerDto.CommissionRate,
+            ContractPeriodMonths = offerDto.ContractPeriodMonths,
+            OfferStatus = true // Yeni teklifler varsayılan olarak aktif kabul edilir
+        };
         _offerDal.Add(offer);
         await _offerDal.SaveAsync();
     }
 
-    public async Task AcceptOfferAsync(string offerId)
+    public async Task AcceptOfferAsync(int offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)
@@ -54,8 +61,10 @@ public class OfferService : IOfferService
         var contract = new Contract
         {
             CommissionRate = offer.CommissionRate,
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddMonths(offer.ContractPeriodMonths)
+            PlayerId = offer.PlayerId,
+            ManagerId = offer.ManagerId,
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddMonths(offer.ContractPeriodMonths)
         };
 
         _contractDal.Add(contract);
@@ -64,7 +73,7 @@ public class OfferService : IOfferService
         
     }
 
-    public async Task  RejectOfferAsync(string offerId)
+    public async Task  RejectOfferAsync(int offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)
@@ -86,7 +95,7 @@ public class OfferService : IOfferService
         await _offerDal.SaveAsync();
     }
 
-    public async Task DeleteOfferAsync(string offerId)
+    public async Task DeleteOfferAsync(int offerId)
     {
         var offer = _offerDal.Get(o => o.OfferId == offerId);
         if (offer == null)

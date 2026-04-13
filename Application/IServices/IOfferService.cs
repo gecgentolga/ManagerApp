@@ -1,16 +1,16 @@
 using Domain.Entities.Concrete;
+using Domain.Entities.DTOs;
 
 namespace Application.IServices;
 
 public interface IOfferService
 {
     List<Offer> GetAllOffers();
-    Offer? GetOfferById(string offerId);
+    Offer? GetOfferById(int offerId);
     List<Offer> GetOffersByPlayerId(string playerId);
-    List<Offer> GetOffersByTeamId(string teamId);
-    Task  CreateOfferAsync(Offer offer);
-    Task  AcceptOfferAsync(string offerId);
-    Task  RejectOfferAsync(string offerId);
+    Task  CreateOfferAsync(OfferDetailDto offerDetailDto);
+    Task  AcceptOfferAsync(int offerId);
+    Task  RejectOfferAsync(int offerId);
     Task  UpdateOfferAsync(Offer offer);
-    Task  DeleteOfferAsync(string offerId);
+    Task  DeleteOfferAsync(int offerId);
 }
