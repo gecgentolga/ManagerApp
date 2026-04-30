@@ -13,6 +13,7 @@ public class PlayerService : IPlayerService
         _playerDal = playerDal;
     }
 
+    
     public List<Player> GetPlayers()
     {
         return _playerDal.GetAll();
@@ -21,6 +22,11 @@ public class PlayerService : IPlayerService
     public Player? GetPlayerById(string playerId)
     {
         return _playerDal.Get(o => o.PlayerId == playerId);
+    }
+
+    public Player? GetPlayerByName(string name)
+    {
+        return _playerDal.Get(x => x.PlayerName == name);
     }
 
     public List<Player> GetPlayersByTeamId(int teamId)

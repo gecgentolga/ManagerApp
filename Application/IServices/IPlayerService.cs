@@ -6,6 +6,7 @@ public interface IPlayerService
 {
     List<Player> GetPlayers();
     Player? GetPlayerById(string playerId);
+    Player? GetPlayerByName(string name);
     List<Player> GetPlayersByTeamId(int teamId);
     List<Player> GetPlayersByPosition(string position);
     Task CreatePlayerAsync(Player player);

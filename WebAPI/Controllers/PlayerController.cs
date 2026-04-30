@@ -1,5 +1,6 @@
 using Application.IServices;
 using Domain.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -13,7 +14,7 @@ public class PlayerController : Controller
     {
         _playerService = playerService;
     }
-
+    [Authorize (Roles="Admin")]
     [HttpGet("GetAllPlayers")]
     public IActionResult GetAllPlayers()
     {
@@ -21,6 +22,7 @@ public class PlayerController : Controller
         return Ok(players);
     }
 
+    [Authorize (Roles="Admin,Manager")]
     [HttpGet("PlayerById")]
     public IActionResult GetPlayerById(string playerId)
     {
@@ -30,6 +32,7 @@ public class PlayerController : Controller
         return Ok(player);
     }
 
+    [Authorize(Roles = "Admin,Manager")]
     [HttpGet("PlayerByPosition")]
     public IActionResult GetPlayerByPosition(string position)
     {
@@ -37,6 +40,7 @@ public class PlayerController : Controller
         return Ok(players);
     }
 
+    [Authorize(Roles = "Admin,Manager")]
     [HttpGet("PlayerByTeamId")]
     public IActionResult GetPlayerByTeamId(int teamId)
     {
@@ -44,6 +48,7 @@ public class PlayerController : Controller
         return Ok(players);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("CreatePlayer")]
     public async Task<IActionResult> CreatePlayer([FromBody] Player player)
     {
@@ -51,6 +56,7 @@ public class PlayerController : Controller
         return CreatedAtAction(nameof(GetPlayerById), new { playerId = player.PlayerId }, player);
     }
 
+    [Authorize(Roles = "Admin,Player")]
     [HttpPut("UpdatePlayer")]
     public async Task<IActionResult> UpdatePlayer([FromBody] Player player)
     {
@@ -58,6 +64,7 @@ public class PlayerController : Controller
         return Ok("Player updated successfully");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("DeletePlayer")]
     public async Task<IActionResult> DeletePlayer(string playerId)
     {

@@ -1,4 +1,5 @@
 using Infrastructure.DataAccess.ImportDataViaApi;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -14,6 +15,7 @@ public class PlayerImportController : Controller
     }
     
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("ImportPlayers")]
     public async Task<IActionResult> ImportPlayers()
     {

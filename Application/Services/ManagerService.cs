@@ -23,6 +23,11 @@ public class ManagerService: IManagerService
         return _managerDal.Get(o=>o.ManagerId==managerId);
     }
 
+    public Manager? GetManagerByName(string name)
+    {
+        return _managerDal.Get(o=>o.ManagerName==name);
+    }
+
     public async Task CreateManagerAsync(Manager manager)
     {
         _managerDal.Add(manager);

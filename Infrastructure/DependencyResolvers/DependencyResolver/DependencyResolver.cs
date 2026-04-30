@@ -1,6 +1,9 @@
+using Application.Abstraction.ISecurityServices;
 using Application.DataAccess;
 using Application.IServices;
 using Application.Services;
+using Infrastructure.Concretes.SecurityServices;
+using Infrastructure.Concretes.SecurityServices.JWT;
 using Infrastructure.DataAccess.Concrete.EntityFramework;
 using Infrastructure.DataAccess.ImportDataViaApi;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +26,10 @@ public static class DependencyResolver
         services.AddScoped<ITeamDal, EfTeamDal>();
         services.AddScoped<IPlayerImport,PlayerImportHandler>();
         services.AddScoped<IManagerDal, EfManagerDal>();
+        services.AddScoped<IUserDal, EfUserDal>();
+        services.AddScoped<IUserClaimDal, EfUserClaimDal>();
+        services.AddScoped<IOperationClaimDal, EfOperationDal>();
+        
         // Business Logic Services
         services.AddScoped<IOfferService, OfferService>();
         services.AddScoped<IOwnedPlayerService, OwnedPlayerService>();
@@ -30,6 +37,10 @@ public static class DependencyResolver
         services.AddScoped<IManagerService,ManagerService>();
         services.AddScoped<IContractService, ContractService>();
         services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITokenService, JWTTokenService>();
+        services.AddScoped<IUserClaimService, UserClaimService>();
         return services;
     }
 }

@@ -1,4 +1,5 @@
 using Application.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -12,7 +13,7 @@ public class TeamController : Controller
     {
         _teamService = teamService;
     }
-
+    
     [HttpGet("GetAllTeams")]
     public IActionResult GetAllTeams()
     {
