@@ -7,10 +7,14 @@ namespace Application.Services;
 public class ManagerService: IManagerService
 {
     private IManagerDal _managerDal;
+    private IUserDal _userDal;
+    private IUserClaimDal _userClaimDal;
 
-    public ManagerService(IManagerDal managerDal)
+    public ManagerService(IManagerDal managerDal, IUserDal userDal, IUserClaimDal userClaimDal)
     {
         _managerDal = managerDal;
+        _userDal = userDal;
+        _userClaimDal = userClaimDal;
     }
     
     public List<Manager> GetManagers()
@@ -36,6 +40,14 @@ public class ManagerService: IManagerService
 
     public async Task DeleteManagerAsync(int managerId)
     {
+        var user = _userDal.Get(u => u.Manager_Id == managerId);
+        if (user != null)
+        {
+            var userclaim = _userClaimDal.Get(uc => uc.UserId == user.Id && uc.OperationClaimId == 2);
+            if (userclaim != null)
+                _userClaimDal.Delete(userclaim);
+        }
+
         var manager = _managerDal.Get(o => o.ManagerId == managerId);
         if (manager == null)
             throw new InvalidOperationException($"Manager {managerId} not found.");

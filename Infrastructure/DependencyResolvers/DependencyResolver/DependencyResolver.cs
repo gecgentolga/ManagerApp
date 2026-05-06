@@ -21,7 +21,6 @@ public static class DependencyResolver
         services.AddScoped<IContractDal, EfContractDal>();
         services.AddScoped<ILeagueDal, EfLeagueDal>();
         services.AddScoped<IOfferDal, EfOfferDal>();
-        services.AddScoped<IOwnedPlayerDal, EfOwnedPlayerDal>();
         services.AddScoped<IPlayerDal, EfPlayerDal>();
         services.AddScoped<ITeamDal, EfTeamDal>();
         services.AddScoped<IPlayerImport,PlayerImportHandler>();
@@ -32,7 +31,6 @@ public static class DependencyResolver
         
         // Business Logic Services
         services.AddScoped<IOfferService, OfferService>();
-        services.AddScoped<IOwnedPlayerService, OwnedPlayerService>();
         services.AddScoped<ITeamService, TeamService>();
         services.AddScoped<IManagerService,ManagerService>();
         services.AddScoped<IContractService, ContractService>();

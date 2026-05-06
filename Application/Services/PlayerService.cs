@@ -6,11 +6,13 @@ namespace Application.Services;
 
 public class PlayerService : IPlayerService
 {
-    private IPlayerDal _playerDal;
+    private readonly IPlayerDal _playerDal;
+    private readonly IContractDal _contractDal;
 
-    public PlayerService(IPlayerDal playerDal)
+    public PlayerService(IPlayerDal playerDal, IContractDal contractDal)
     {
         _playerDal = playerDal;
+        _contractDal = contractDal;
     }
 
     
@@ -27,6 +29,19 @@ public class PlayerService : IPlayerService
     public Player? GetPlayerByName(string name)
     {
         return _playerDal.Get(x => x.PlayerName == name);
+    }
+
+    public List<Player> GetPlayersByManagerId(int managerId)
+    {
+        var playerIds = _contractDal.GetAll(o => o.ManagerId == managerId)
+            .Select(o => o.PlayerId)
+            .Distinct()
+            .ToList();
+
+        if (playerIds.Count == 0)
+            return new List<Player>();
+
+        return _playerDal.GetAll(o => playerIds.Contains(o.PlayerId));
     }
 
     public List<Player> GetPlayersByTeamId(int teamId)

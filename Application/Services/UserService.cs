@@ -7,10 +7,14 @@ namespace Application.Services;
 public class UserService:IUserService
 {
     private IUserDal _userDal;
+    private IManagerDal _managerDal;
+    private IPlayerDal _playerDal;
     
-    public UserService(IUserDal userDal)
+    public UserService(IUserDal userDal, IManagerDal managerDal, IPlayerDal playerDal)
     {
         _userDal = userDal;
+        _managerDal = managerDal;
+        _playerDal = playerDal;
     }
     public List<User> GetAll()
     {
@@ -48,8 +52,29 @@ public class UserService:IUserService
 
     public async Task DeleteUserAsync(int userId)
     {
-        var user = _userDal.Get(o => o.Id == userId);
+        var user = _userDal.Get(u => u.Id == userId);
+
+        if (user == null)
+            throw new Exception("User not found");
+
+        if (user.Manager_Id != null)
+        {
+            var manager = _managerDal.Get(m => m.ManagerId == user.Manager_Id);
+
+            if (manager != null)
+                _managerDal.Delete(manager);
+        }
+
+        if (user.Player_Id != null)
+        {
+            var player = _playerDal.Get(p => p.PlayerId == user.Player_Id);
+
+            if (player != null)
+                _playerDal.Delete(player);
+        }
+
         _userDal.Delete(user);
+
         await _userDal.SaveAsync();
     }
     

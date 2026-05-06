@@ -35,20 +35,14 @@ public class AuthService:IAuthService
         if (UserExists(userForRegisterDto.Email)) return null;
         string? player_Id = null;
         int? manager_Id = null;
-        string fullName = userForRegisterDto.FirstName +""+ userForRegisterDto.LastName;
+        string fullName = userForRegisterDto.FirstName +" "+ userForRegisterDto.LastName;
         //If user is player, add player to the table and match playerid with user.
         //If player already exists, match playerid with user.
         if (userForRegisterDto.Type)//player
         {
           var player=  _playerService.GetPlayerByName(fullName);
-          if (player == null)
-          {
-              player = new Player();
-              player.PlayerName = fullName;
-              await _playerService.CreatePlayerAsync(player);
-          }
-
-          player_Id =_playerService.GetPlayerByName(fullName).PlayerId;
+          
+          player_Id =player.PlayerId;
 
         }
 

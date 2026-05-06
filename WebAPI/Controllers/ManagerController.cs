@@ -9,10 +9,14 @@ namespace WebAPI.Controllers;
 public class ManagerController : Controller
 {
  private IManagerService _managerService;
+ private IPlayerService _playerService;
+ private IUserClaimService _userClaimService;
 
- public ManagerController(IManagerService managerService)
+ public ManagerController(IManagerService managerService, IPlayerService playerService, IUserClaimService userClaimService)
  {
      _managerService = managerService;
+     _playerService = playerService;
+     _userClaimService = userClaimService;
  }
  [Authorize(Roles = "Admin,Player")]
  [HttpGet("GetAllManagers")]
@@ -29,6 +33,13 @@ public class ManagerController : Controller
         if (manager == null)
             return NotFound();
         return Ok(manager);
+ }
+ [Authorize(Roles = "Admin,Manager,Player")]
+ [HttpGet("ManagerPlayersByManagerId")]
+ public IActionResult GetManagerPlayersByManagerId(int managerId)
+ {
+     var players = _playerService.GetPlayersByManagerId(managerId);
+     return Ok(players);
  }
  [Authorize(Roles = "Admin")]
  [HttpPost("CreateManager")]
