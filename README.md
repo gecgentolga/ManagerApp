@@ -84,9 +84,6 @@ Update `WebAPI/appsettings.json`:
 }
 ```
 
-### Important Security Notes
-
-- `PlayerImportHandler` currently contains a hardcoded external API key in source code; move this to configuration/secret storage.
 
 ## Run Locally
 
